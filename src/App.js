@@ -1,25 +1,47 @@
-import logo from './logo.svg';
 import './App.css';
+import {useState} from "react";
 
-function App() {
+
+function Square({turn, setTurn}) {
+  const [value, setValue] = useState(null);
+
+  function handleClick() {
+    if(value !== null) return;
+    console.log(turn);
+    if(turn){
+      setValue('x');
+    }
+    else{
+      setValue('o');
+    }
+    setTurn(!turn);
+  }
+  return <button className="square" onClick={handleClick}>{value}</button>;
+}
+
+export default function Board() {
+  const [turn, setTurn] = useState(true);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <>
+        <div className="board-row">
+          <Square turn={turn} setTurn={setTurn} />
+          <Square turn={turn} setTurn={setTurn} />
+          <Square turn={turn} setTurn={setTurn} />
+        </div>
+  <div className="board-row">
+            <Square turn={turn} setTurn={setTurn} />
+            <Square turn={turn} setTurn={setTurn} />
+            <Square turn={turn} setTurn={setTurn} />
+          </div>
+  <div className="board-row">
+            <Square turn={turn} setTurn={setTurn} />
+            <Square turn={turn} setTurn={setTurn} />
+            <Square turn={turn} setTurn={setTurn} />
+        </div>
+
+      </>
   );
 }
 
-export default App;
+
