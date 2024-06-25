@@ -19,26 +19,21 @@ function Square({turn, setTurn}) {
   return <button className="square" onClick={handleClick}>{value}</button>;
 }
 
+function checkWinning() {
+    return;
+}
+
 export default function Board() {
   const [turn, setTurn] = useState(true);
+  const [squares, setSquares] = useState(Array(9).fill(null));
 
   return (
       <>
         <div className="board-row">
           <Square turn={turn} setTurn={setTurn} />
-          <Square turn={turn} setTurn={setTurn} />
-          <Square turn={turn} setTurn={setTurn} />
+          {/*<Square turn={turn} setTurn={setTurn} />*/}
         </div>
-  <div className="board-row">
-            <Square turn={turn} setTurn={setTurn} />
-            <Square turn={turn} setTurn={setTurn} />
-            <Square turn={turn} setTurn={setTurn} />
-          </div>
-  <div className="board-row">
-            <Square turn={turn} setTurn={setTurn} />
-            <Square turn={turn} setTurn={setTurn} />
-            <Square turn={turn} setTurn={setTurn} />
-        </div>
+
 
       </>
   );
