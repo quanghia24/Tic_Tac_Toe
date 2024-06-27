@@ -5,15 +5,11 @@ function Square({value, onSquareClick}) {
     return <button className="square" onClick={onSquareClick}>{value}</button>;
 }
 
-
-function HUD() {
-    const handleClick = () => {
-        console.log('resetboard');
-    }
-    return <button className="hud" onClick={handleClick} >reset</button>;
+function HUD({onChange}) {
+    return <button className="hud" onClick={onChange} >reset</button>;
 }
 
-function checkWinning(squares) {
+function checkWinning( squares) {
     const lines = [
         [0, 1, 2],
         [3, 4, 5],
@@ -22,23 +18,18 @@ function checkWinning(squares) {
         [1, 4, 7],
         [2, 5, 8],
         [0, 4, 8],
-        [2, 4, 6]
-    ]
+        [2, 4, 6],
+    ];
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
-        if(squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
             return squares[a];
         }
     }
     return null;
 }
 
-function App() {
-
-    const [xmove, setXmove] = useState(true);
-    const [squares, setSquares] = useState(Array(9).fill(null));
-
-
+function Board({xmove, squares, onPlay}) {
     const handleClick = (i) => {
         if(squares[i] || checkWinning(squares)) {
             return;
@@ -50,13 +41,11 @@ function App() {
         else{
             nextSquare[i] = 'O';
         }
-        setXmove(!xmove)
-        setSquares(nextSquare);
+        onPlay(nextSquare);
     }
 
     const winner = checkWinning(squares);
     let status;
-
     if(winner){
         status = "Winner is: " + winner;
     }
@@ -82,15 +71,64 @@ function App() {
                 <Square value={squares[7]} onSquareClick={() => handleClick(7)}/>
                 <Square value={squares[8]} onSquareClick={() => handleClick(8)}/>
             </div>
-            <br/>
-            <br/>
-            <br/>
-            <div className="row">
-                <HUD/>
-            </div>
         </>
     );
 
 }
 
-export default App;
+function Game() {
+    const [history, setHistory] = useState([Array(9).fill(null)]);
+    const [currentMove, setCurrentMove] = useState(0);
+    const xmove = currentMove % 2 === 0;
+    const currentSquares = history[currentMove];
+
+    function handlePlay(nextSquares) {
+        const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+        setHistory(nextHistory);
+        setCurrentMove(nextHistory.length - 1);
+    }
+
+    function handleReset() {
+        setCurrentMove(0);
+        setHistory([Array(9).fill(null)]);
+    }
+
+    function jumpTo(nextMove) {
+        setCurrentMove(nextMove);
+    }
+
+
+    const moves = history.map((squares, move) => {
+        let description;
+        if (move > 0) {
+            description = 'Go to move #' + move;
+        } else {
+            description = 'Go to game start';
+        }
+        return (
+            <li key={move}>
+                <button onClick={() => jumpTo(move)}>{description}</button>
+            </li>
+        );
+    });
+    return (
+        <>
+            <div className="game">
+                <div className="game-board">
+                    <Board xmove={xmove} squares={currentSquares} onPlay={handlePlay}/>
+                </div>
+                <div className="game-info">
+                    <ol>{moves}</ol>
+                </div>
+                <br/>
+
+            </div>
+
+            <div className="reset-btn">
+                <HUD onChange={handleReset}/>
+            </div>
+        </>
+    );
+}
+
+export default Game;

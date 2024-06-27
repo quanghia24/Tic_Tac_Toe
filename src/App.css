@@ -87,3 +87,8 @@ body {
 .game-info {
   margin-left: 20px;
 }
+
+.hud {
+  margin-top: 40px;
+  width: 100px;
+}
